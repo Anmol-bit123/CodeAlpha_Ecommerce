@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart - ShopAlpha</title>
+  <link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+  <nav>
+    <a href="/" class="brand">ShopAlpha</a>
+    <div class="nav-links">
+      <a href="/">Products</a>
+      <a href="/orders">My Orders</a>
+      <form method="POST" action="/logout" style="display:inline;">
+        <button class="btn btn-outline btn-sm">Logout</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <% if (success && success.length) { %>
+      <div class="flash flash-success"><%= success %></div>
+    <% } %>
+    <% if (error && error.length) { %>
+      <div class="flash flash-error"><%= error %></div>
+    <% } %>
+
+    <div class="page-header"><h1>Your Cart</h1></div>
+
+    <% if (!cart || cart.length === 0) { %>
+      <div class="empty-state">
+        <h2>Your cart is empty</h2>
+        <p>Add some products to get started.</p>
+        <a href="/" class="btn btn-primary" style="margin-top:16px;">Browse Products</a>
+      </div>
+    <% } else { %>
+      <div class="cart-layout">
+        <div class="cart-items">
+          <% for (let item of cart) { %>
+            <div class="cart-item">
+              <div>
+                <div class="cart-item-name"><%= item.name %></div>
+                <div class="cart-item-price">
+                  Rs.<%= Number(item.price).toLocaleString('en-IN') %> x <%= item.quantity %>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <strong>Rs.<%= (Number(item.price) * item.quantity).toLocaleString('en-IN') %></strong>
+                <form method="POST" action="/cart/remove">
+                  <input type="hidden" name="product_id" value="<%= item.product_id %>"/>
+                  <button class="btn btn-danger btn-sm">Remove</button>
+                </form>
+              </div>
+            </div>
+          <% } %>
+        </div>
+
+        <div class="cart-summary">
+          <h2>Order Summary</h2>
+          <% for (let item of cart) { %>
+            <div class="summary-row">
+              <span><%= item.name %> x<%= item.quantity %></span>
+              <span>Rs.<%= (Number(item.price) * item.quantity).toLocaleString('en-IN') %></span>
+            </div>
+          <% } %>
+          <div class="summary-total">
+            <span>Total</span>
+            <span>Rs.<%= Number(total).toLocaleString('en-IN') %></span>
+          </div>
+          <form method="POST" action="/orders" style="margin-top:20px;">
+            <button type="submit" class="btn btn-primary btn-full">Place Order</button>
+          </form>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>

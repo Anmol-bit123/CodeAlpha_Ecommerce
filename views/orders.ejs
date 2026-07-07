@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Orders — ShopAlpha</title>
+  <link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+  <nav>
+    <a href="/" class="brand">🛍 ShopAlpha</a>
+    <div class="nav-links">
+      <a href="/">Products</a>
+      <a href="/cart">🛒 Cart</a>
+      <form method="POST" action="/logout" style="display:inline;">
+        <button class="btn btn-outline btn-sm">Logout</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <% if (success.length) { %><div class="flash flash-success"><%= success %></div><% } %>
+
+    <div class="page-header"><h1>My Orders</h1></div>
+
+    <% if (orders.length === 0) { %>
+      <div class="empty-state">
+        <h2>No orders yet</h2>
+        <p>Place your first order to see it here.</p>
+        <a href="/" class="btn btn-primary" style="margin-top:16px;">Shop Now</a>
+      </div>
+    <% } else { %>
+      <% for (let order of orders) { %>
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-id">Order #<%= order.id %></span>
+            <span class="order-status"><%= order.status %></span>
+          </div>
+          <div class="order-items-list">Items: <%= order.items %></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.82rem;color:#6b7280;"><%= new Date(order.created_at).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}) %></span>
+            <span class="order-total">₹<%= parseFloat(order.total).toLocaleString('en-IN') %></span>
+          </div>
+        </div>
+      <% } %>
+    <% } %>
+  </div>
+</body>
+</html>
